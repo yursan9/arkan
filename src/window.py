@@ -23,7 +23,7 @@ from gi.repository import Gtk, Handy
 Handy.init()
 
 
-@Gtk.Template(resource_path='/com/github/yursan9/Arkan/window.ui')
+@Gtk.Template(resource_path='/com/github/yursan9/Arkan/ui/window.ui')
 class Window(Gtk.ApplicationWindow):
     __gtype_name__ = 'Window'
 
