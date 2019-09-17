@@ -1,0 +1,7 @@
+data/com.github.yursan9.Arkan.desktop.in
+data/com.github.yursan9.Arkan.appdata.xml.in
+data/com.github.yursan9.Arkan.gschema.xml
+src/window.ui
+src/main.py
+src/window.py
+
