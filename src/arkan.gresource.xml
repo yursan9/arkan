@@ -2,5 +2,7 @@
 <gresources>
   <gresource prefix="/com/github/yursan9/Arkan">
     <file>ui/window.ui</file>
+    <file>ui/shalatlist.ui</file>
+    <file>ui/shalatlistrow.ui</file>
   </gresource>
 </gresources>
