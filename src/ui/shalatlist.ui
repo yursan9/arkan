@@ -6,12 +6,16 @@
   <template class="ShalatList" parent="HdyColumn">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
+    <property name="halign">start</property>
     <property name="maximum_width">250</property>
-    <property name="linear_growth_width">150</property>
+    <property name="linear_growth_width">200</property>
     <child>
       <object class="GtkListBox" id="listbox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <style>
+          <class name="sidebar"/>
+        </style>
       </object>
     </child>
   </template>

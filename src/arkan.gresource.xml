@@ -4,5 +4,6 @@
     <file>ui/window.ui</file>
     <file>ui/shalatlist.ui</file>
     <file>ui/shalatlistrow.ui</file>
+    <file>ui/shalatoverview.ui</file>
   </gresource>
 </gresources>
