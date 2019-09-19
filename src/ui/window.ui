@@ -15,15 +15,33 @@
           <object class="GtkHeaderBar" id="header_bar">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="title">Hello, World!</property>
+            <property name="title">Arkan</property>
             <property name="show_close_button">True</property>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="place_btn">
                 <property name="label" translatable="yes">Place</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
               </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="prev_btn">
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="no_show_all">True</property>
+                <signal name="clicked" handler="on_prev_btn_clicked" swapped="no"/>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="icon_name">go-previous-symbolic</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="position">3</property>
+              </packing>
             </child>
             <child>
               <object class="GtkMenuButton" id="menu_btn">
@@ -41,7 +59,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="refresh_btn">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -55,7 +73,7 @@
               </object>
               <packing>
                 <property name="pack_type">end</property>
-                <property name="position">1</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </object>
@@ -68,6 +86,8 @@
         <property name="can_focus">False</property>
         <property name="mode_transition_type">slide</property>
         <property name="child_transition_type">slide</property>
+        <signal name="notify::folded" handler="on_contents_folded" swapped="no"/>
+        <signal name="notify::visible-child" handler="on_contents_visible_change" swapped="no"/>
         <child>
           <placeholder/>
         </child>

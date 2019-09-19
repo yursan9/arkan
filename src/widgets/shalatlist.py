@@ -47,3 +47,15 @@ class ShalatList(Handy.Column):
         for x in example:
             row = ShalatListRow(x['name'], x['time'])
             self.listbox.add(row)
+
+    def to_column(self):
+        self.set_border_width(18)
+        self.set_halign(Gtk.Align.FILL)
+        self.listbox.get_style_context().remove_class('sidebar')
+        self.listbox.get_style_context().add_class('frame')
+
+    def to_sidebar(self):
+        self.set_border_width(0)
+        self.set_halign(Gtk.Align.START)
+        self.listbox.get_style_context().remove_class('sidebar')
+        self.listbox.get_style_context().add_class('frame')

@@ -20,13 +20,31 @@
 import gi
 gi.require_version('Gtk', '3.0')
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GObject
 
 
 @Gtk.Template(resource_path='/com/github/yursan9/Arkan/ui/shalatoverview.ui')
 class ShalatOverview(Gtk.Box):
     __gtype_name__ = 'ShalatOverview'
 
+    __gsignals__ = {
+        'change_view': (GObject.SIGNAL_RUN_LAST, None, ())
+    }
+
+    list_btn = Gtk.Template.Child()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+    def to_view(self):
+        self.list_btn.hide()
         
+    def to_column(self):
+        self.list_btn.show()
+
+    @Gtk.Template.Callback()
+    def on_list_btn_clicked(self, button):
+        self.emit('change_view')
+
+    def do_change_view(self):
+        pass

@@ -30,15 +30,65 @@ class Window(Gtk.ApplicationWindow):
     __gtype_name__ = 'Window'
 
     contents = Gtk.Template.Child()
+    prev_btn = Gtk.Template.Child()
+    place_btn = Gtk.Template.Child()
+    refresh_btn = Gtk.Template.Child()
+
+    shalat_list = None
+    shalat_overview = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        shalat_list = ShalatList()
-        shalat_list.populate()
-        self.contents.add(shalat_list)
+        self.shalat_list = ShalatList()
+        self.shalat_list.populate()
+        self.contents.add(self.shalat_list)
+        self.contents.child_set(self.shalat_list, name='listview')
 
-        shalat_overview = ShalatOverview()
-        self.contents.add(shalat_overview)
+        self.shalat_overview = ShalatOverview()
+        self.contents.add(self.shalat_overview)
+        self.contents.child_set(self.shalat_overview, name='overview')
 
+        self.shalat_overview.connect('change_view', self.on_change_view)
+
+        self.normal_header()
         self.show_all()
+
+    def list_header(self):
+        self.place_btn.hide()
+        self.refresh_btn.hide()
+        self.prev_btn.show()
+
+    def normal_header(self):
+        self.place_btn.show()
+        self.refresh_btn.show()
+        self.prev_btn.hide()
+
+    @Gtk.Template.Callback()
+    def on_contents_folded(self, widget, param):
+        folded = self.contents.get_property(param.name)
+
+        if folded:
+            self.contents.set_visible_child_name('overview')
+            self.shalat_overview.to_column()
+            self.shalat_list.to_column()
+        else:
+            self.shalat_list.to_sidebar()
+            self.shalat_overview.to_view()
+            self.normal_header()
+
+    @Gtk.Template.Callback()
+    def on_contents_visible_change(self, widget, param):
+        view = self.contents.get_property(param.name)
+
+        if view == self.shalat_list:
+            self.list_header()
+        elif view == self.shalat_overview:
+            self.normal_header()
+
+    @Gtk.Template.Callback()
+    def on_prev_btn_clicked(self, widget):
+        self.contents.set_visible_child(self.shalat_overview)
+
+    def on_change_view(self, widget):
+        self.contents.set_visible_child(self.shalat_list)
