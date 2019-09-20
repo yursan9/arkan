@@ -24,6 +24,7 @@ Handy.init()
 
 from .widgets.shalatlist import ShalatList
 from .widgets.shalatoverview import ShalatOverview
+from .backends.manager import Manager
 
 @Gtk.Template(resource_path='/com/github/yursan9/Arkan/ui/window.ui')
 class Window(Gtk.ApplicationWindow):
@@ -33,15 +34,21 @@ class Window(Gtk.ApplicationWindow):
     prev_btn = Gtk.Template.Child()
     place_btn = Gtk.Template.Child()
     refresh_btn = Gtk.Template.Child()
+    header_bar = Gtk.Template.Child()
 
     shalat_list = None
     shalat_overview = None
 
+    manager = None
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+        self.manager = Manager()
+        self.manager.update_with_location('Jakarta', 'Indonesia')
+
         self.shalat_list = ShalatList()
-        self.shalat_list.populate()
+        self.shalat_list.populate(self.manager.get_shalat_times())
         self.contents.add(self.shalat_list)
         self.contents.child_set(self.shalat_list, name='listview')
 
@@ -60,6 +67,7 @@ class Window(Gtk.ApplicationWindow):
         self.prev_btn.show()
 
     def normal_header(self):
+        self.header_bar.set_subtitle(self.manager.get_hijri_date())
         self.place_btn.show()
         self.refresh_btn.show()
         self.prev_btn.hide()

@@ -35,17 +35,10 @@ class ShalatList(Handy.Column):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def populate(self):
-        example = [
-            {'name': 'Fajr', 'time': '04:45'},
-            {'name': 'Zuhr', 'time': '12:00'},
-            {'name': 'Ashr', 'time': '15:15'},
-            {'name': 'Maghrib', 'time': '18:45'},
-            {'name': 'Isya', 'time': '19:05'},
-        ]
-
-        for x in example:
-            row = ShalatListRow(x['name'], x['time'])
+    def populate(self, data):
+        for key in data:
+            time = data[key].strftime('%H:%M')
+            row = ShalatListRow(key, time)
             self.listbox.add(row)
 
     def to_column(self):

@@ -33,3 +33,4 @@ arkan_sources = [
 
 install_data(arkan_sources, install_dir: moduledir)
 install_subdir('widgets', install_dir: moduledir)
+install_subdir('backends', install_dir: moduledir)
