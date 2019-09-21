@@ -101,7 +101,7 @@ class Window(Gtk.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def on_refresh_btn_clicked(self, widget):
-        self.manager.update_with_location('Jakarta', 'Indonesia')
+        self.manager.update()
 
     def on_change_view(self, widget):
         self.contents.set_visible_child(self.shalat_list)

@@ -1,5 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="arkan">
 	<schema id="com.github.yursan9.Arkan" path="/com/github/yursan9/Arkan/">
+	  <key name="city" type="s">
+	    <default>'Jakarta'</default>
+      <summary>City name for getting prayer times</summary>
+      <description>
+        The name of the city
+      </description>
+    </key>
+
+	  <key name="country" type="s">
+	    <default>'Indonesia'</default>
+      <summary>Country name for getting prayer times</summary>
+      <description>
+        The name of the country
+      </description>
+    </key>
+
+	  <key name="auto-location" type="b">
+	    <default>false</default>
+      <summary>Automatically determined location</summary>
+    </key>
+
+	  <key name="last-update" type="(iii)">
+	    <default>(0, 0, 0)</default>
+      <summary>Last time updates the schedule</summary>
+      <description>
+        When the last time you update the schedules. Its format is YEAR, MONTH, DAY.
+      </description>
+    </key>
+
+	  <key name="mute-adzan" type="a{sb}">
+	    <default>{'Fajr': true}</default>
+      <summary>List of muted adzan</summary>
+      <description>
+        It's a key value pair for knowing which adzan is muted.
+      </description>
+    </key>
 	</schema>
 </schemalist>

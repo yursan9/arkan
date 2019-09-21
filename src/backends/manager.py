@@ -17,7 +17,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from gi.repository import GObject, GLib
+from gi.repository import GObject, GLib, Gio
 
 from pathlib import Path
 from datetime import datetime
@@ -39,30 +39,49 @@ class Manager(GObject.Object):
     shalat_times = {}
     sunmoon_times = {}
     hijri_date = ""
+    settings = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.filename = Path(GLib.get_user_cache_dir())
         self.filename = self.filename / CACHE_FILE
 
+        self.settings = Gio.Settings.new('com.github.yursan9.Arkan')
+
         if self.filename.exists():
             self._populate()
 
-    def update_with_location(self, city, country):
-        def update():
-            now = datetime.today()
+    def update(self):
+        now = datetime.today()
+
+        autoloc = self.settings.get_value('auto-location')
+        if autoloc:
+            url = 'http://api.aladhan.com/v1/calendar'
+            data = {'latitude': 0.0, 'longitude': 0.0}
+        else:
+            url = 'http://api.aladhan.com/v1/calendarByCity'
+            city = self.settings.get_value('city')
+            country = self.settings.get_value('country')
+            data = {'city': city, 'country': country}
+
+        def do(url, data):
             payload = {'method': 5, 'city': city, 'country': country,
                        'month': now.month, 'year': now.year, 'adjustment': 1}
-            r = requests.get('http://api.aladhan.com/v1/calendarByCity',
-                             params=payload)
+            payload.update(data)
+            r = requests.get(url, params=payload)
 
+            self.settings.set_value(
+                'last-update',
+                GLib.Variant('(iii)', (now.year, now.month, now.day)))
             self._save(r.text)
             self._populate(r.json())
             GLib.idle_add(self._emit_updated_signal)
 
-        thread = threading.Thread(target=update)
-        thread.daemon = True
-        thread.start()
+        last_update = self.settings.get_value('last-update')
+        if now.month != last_update[1]:
+            thread = threading.Thread(target=do, args=(url, data))
+            thread.daemon = True
+            thread.start()
 
     def get_current_shalat(self):
         now = datetime.now()
