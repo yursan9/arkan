@@ -49,9 +49,10 @@ class Manager(GObject.Object):
     def update_with_location(self, city, country):
         def update():
             now = datetime.today()
-            payload = {'method': '3', 'city': city, 'country': country, 'month': now.month, 'year': now.year}
             r = requests.get('http://api.aladhan.com/v1/calendarByCity', params=payload)
 
+            payload = {'method': 5, 'city': city, 'country': country,
+                'month': now.month, 'year': now.year, 'adjustment': 1}
             self._save(r.text)
             self._populate(r.json())
             GLib.idle_add(self._emit_updated_signal)
