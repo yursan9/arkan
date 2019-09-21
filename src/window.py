@@ -26,6 +26,7 @@ from .widgets.shalatlist import ShalatList
 from .widgets.shalatoverview import ShalatOverview
 from .backends.manager import Manager
 
+
 @Gtk.Template(resource_path='/com/github/yursan9/Arkan/ui/window.ui')
 class Window(Gtk.ApplicationWindow):
     __gtype_name__ = 'Window'
@@ -48,7 +49,6 @@ class Window(Gtk.ApplicationWindow):
         self.manager.update_with_location('Jakarta', 'Indonesia')
 
         self.shalat_list = ShalatList()
-        self.shalat_list.populate(self.manager.get_shalat_times())
         self.contents.add(self.shalat_list)
         self.contents.child_set(self.shalat_list, name='listview')
 
@@ -57,6 +57,7 @@ class Window(Gtk.ApplicationWindow):
         self.contents.child_set(self.shalat_overview, name='overview')
 
         self.shalat_overview.connect('change_view', self.on_change_view)
+        self.manager.connect('updated', self.on_manager_updated)
 
         self.normal_header()
         self.show_all()
@@ -100,3 +101,7 @@ class Window(Gtk.ApplicationWindow):
 
     def on_change_view(self, widget):
         self.contents.set_visible_child(self.shalat_list)
+
+    def on_manager_updated(self, manager):
+        self.normal_header()
+        self.shalat_list.populate(manager.get_shalat_times())

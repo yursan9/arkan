@@ -23,11 +23,16 @@ from pathlib import Path
 from datetime import datetime
 
 import requests
+import threading
 import json
 
 CACHE_FILE = 'shalat_time.json'
 
 class Manager(GObject.Object):
+    __gsignals__ = {
+        'updated': (GObject.SIGNAL_RUN_LAST, None, ())
+    }
+
     filename = None
     shalat_times = {}
     sunmoon_times = {}
@@ -39,12 +44,41 @@ class Manager(GObject.Object):
         self.filename = self.filename / CACHE_FILE
 
     def update_with_location(self, city, country):
-        now = datetime.today()
-        payload = {'method': '3', 'city': city, 'country': country, 'month': now.month, 'year': now.year}
-        r = requests.get('http://api.aladhan.com/v1/calendarByCity', params=payload)
+        def update():
+            now = datetime.today()
+            payload = {'method': '3', 'city': city, 'country': country, 'month': now.month, 'year': now.year}
+            r = requests.get('http://api.aladhan.com/v1/calendarByCity', params=payload)
 
-        self._save(r.text)
-        self._populate(r.json())
+            self._save(r.text)
+            self._populate(r.json())
+            GLib.idle_add(self._emit_updated_signal)
+
+        thread = threading.Thread(target=update)
+        thread.daemon = True
+        thread.start()
+
+    def get_current_shalat(self):
+        now = datetime.now()
+
+        if self.times['Fajr'] < now <= self.times['Sunrise']:
+            return 'Fajr'
+        elif self.times['Sunrise'] < now <= self.times['Dhuhr']:
+            return 'Dhuhr'
+        elif self.times['Dhuhr'] < now <= self.times['Asr']:
+            return 'Asr'
+        elif self.times['Asr'] < now <= self.times['Maghrib']:
+            return 'Maghrib'
+        elif self.time['Maghrib'] < now <= self.times['Isha']:
+            return 'Isha'
+
+    def get_shalat_times(self):
+        return self.shalat_times
+
+    def get_sunmoon_times(self):
+        return self.sunmoon_times
+
+    def get_hijri_date(self):
+        return self.hijri_date
 
     def _save(self, text):
         with self.filename.open('w') as f:
@@ -80,25 +114,7 @@ class Manager(GObject.Object):
     def _get_hijri_date(self, data):
         self.hijri_date = "{} {} {}".format(data['day'], data['month']['en'], data['year'])
 
-    def get_current_shalat(self):
-        now = datetime.now()
+    def _emit_updated_signal(self):
+        self.emit('updated')
+        return False
 
-        if self.times['Fajr'] < now <= self.times['Sunrise']:
-            return 'Fajr'
-        elif self.times['Sunrise'] < now <= self.times['Dhuhr']:
-            return 'Dhuhr'
-        elif self.times['Dhuhr'] < now <= self.times['Asr']:
-            return 'Asr'
-        elif self.times['Asr'] < now <= self.times['Maghrib']:
-            return 'Maghrib'
-        elif self.time['Maghrib'] < now <= self.times['Isha']:
-            return 'Isha'
-
-    def get_shalat_times(self):
-        return self.shalat_times
-
-    def get_sunmoon_times(self):
-        return self.sunmoon_times
-
-    def get_hijri_date(self):
-        return self.hijri_date
