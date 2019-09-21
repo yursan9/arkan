@@ -35,6 +35,8 @@ class ShalatList(Handy.Column):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+        self.listbox.set_header_func(self._add_separator)
+
     def populate(self, data):
         for key in data:
             time = data[key].strftime('%H:%M')
@@ -52,3 +54,14 @@ class ShalatList(Handy.Column):
         self.set_halign(Gtk.Align.START)
         self.listbox.get_style_context().remove_class('sidebar')
         self.listbox.get_style_context().add_class('frame')
+
+    def _add_separator(self, row, before):
+        # Before is none, for the first row
+        if before is None:
+            row.set_header(None)
+            return
+
+        current = row.get_header()
+        if current is None:
+            current = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
+            row.set_header(current)

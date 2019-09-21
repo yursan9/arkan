@@ -14,6 +14,8 @@
       <object class="GtkListBox" id="listbox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="selection_mode">none</property>
+        <property name="activate_on_single_click">False</property>
         <style>
           <class name="sidebar"/>
         </style>
