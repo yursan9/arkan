@@ -46,7 +46,6 @@ class Window(Gtk.ApplicationWindow):
         super().__init__(**kwargs)
 
         self.manager = Manager()
-        self.manager.update_with_location('Jakarta', 'Indonesia')
 
         self.shalat_list = ShalatList()
         self.contents.add(self.shalat_list)
@@ -59,6 +58,7 @@ class Window(Gtk.ApplicationWindow):
         self.shalat_overview.connect('change_view', self.on_change_view)
         self.manager.connect('updated', self.on_manager_updated)
 
+        self.populate_from_manager()
         self.normal_header()
         self.show_all()
 
@@ -68,10 +68,13 @@ class Window(Gtk.ApplicationWindow):
         self.prev_btn.show()
 
     def normal_header(self):
-        self.header_bar.set_subtitle(self.manager.get_hijri_date())
         self.place_btn.show()
         self.refresh_btn.show()
         self.prev_btn.hide()
+
+    def populate_from_manager(self):
+        self.header_bar.set_subtitle(self.manager.get_hijri_date())
+        self.shalat_list.populate(self.manager.get_shalat_times())
 
     @Gtk.Template.Callback()
     def on_contents_folded(self, widget, param):
@@ -99,9 +102,12 @@ class Window(Gtk.ApplicationWindow):
     def on_prev_btn_clicked(self, widget):
         self.contents.set_visible_child(self.shalat_overview)
 
+    @Gtk.Template.Callback()
+    def on_refresh_btn_clicked(self, widget):
+        self.manager.update_with_location('Jakarta', 'Indonesia')
+
     def on_change_view(self, widget):
         self.contents.set_visible_child(self.shalat_list)
 
     def on_manager_updated(self, manager):
-        self.normal_header()
-        self.shalat_list.populate(manager.get_shalat_times())
+        self.populate_from_manager()

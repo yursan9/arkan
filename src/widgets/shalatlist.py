@@ -38,6 +38,8 @@ class ShalatList(Handy.Column):
         self.listbox.set_header_func(self._add_separator)
 
     def populate(self, data):
+        self.listbox.foreach(lambda widget: widget.destroy())
+
         for key in data:
             time = data[key].strftime('%H:%M')
             row = ShalatListRow(key, time)

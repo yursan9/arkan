@@ -45,6 +45,3 @@ class ShalatOverview(Gtk.Box):
     @Gtk.Template.Callback()
     def on_list_btn_clicked(self, button):
         self.emit('change_view')
-
-    def do_change_view(self):
-        pass
