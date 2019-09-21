@@ -26,7 +26,9 @@ import requests
 import threading
 import json
 
+
 CACHE_FILE = 'shalat_time.json'
+
 
 class Manager(GObject.Object):
     __gsignals__ = {
@@ -49,10 +51,11 @@ class Manager(GObject.Object):
     def update_with_location(self, city, country):
         def update():
             now = datetime.today()
-            r = requests.get('http://api.aladhan.com/v1/calendarByCity', params=payload)
-
             payload = {'method': 5, 'city': city, 'country': country,
-                'month': now.month, 'year': now.year, 'adjustment': 1}
+                       'month': now.month, 'year': now.year, 'adjustment': 1}
+            r = requests.get('http://api.aladhan.com/v1/calendarByCity',
+                             params=payload)
+
             self._save(r.text)
             self._populate(r.json())
             GLib.idle_add(self._emit_updated_signal)
@@ -116,9 +119,11 @@ class Manager(GObject.Object):
             self.sunmoon_times[key] = times[key]
 
     def _get_hijri_date(self, data):
-        self.hijri_date = "{} {} {}".format(data['day'], data['month']['en'], data['year'])
+        day = data['day']
+        month = data['month']['en']
+        year = data['year']
+        self.hijri_date = "{} {} {}".format(day, month, year)
 
     def _emit_updated_signal(self):
         self.emit('updated')
         return False
-

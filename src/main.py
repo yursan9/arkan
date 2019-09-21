@@ -19,10 +19,11 @@ import sys
 import gi
 
 gi.require_version('Gtk', '3.0')
+gi.require_version('Handy', '0.0')
 
-from gi.repository import Gtk, Gio
+from gi.repository import Gtk, Gio # NOQA
 
-from .window import Window
+from .window import Window # NOQA
 
 
 class Application(Gtk.Application):

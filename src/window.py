@@ -15,16 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gi
-gi.require_version('Gtk', '3.0')
-gi.require_version('Handy', '0.0')
-
 from gi.repository import Gtk, Handy
-Handy.init()
 
 from .widgets.shalatlist import ShalatList
 from .widgets.shalatoverview import ShalatOverview
 from .backends.manager import Manager
+
+Handy.init()
 
 
 @Gtk.Template(resource_path='/com/github/yursan9/Arkan/ui/window.ui')

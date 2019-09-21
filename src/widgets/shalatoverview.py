@@ -17,9 +17,6 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import gi
-gi.require_version('Gtk', '3.0')
-
 from gi.repository import Gtk, GObject
 
 
@@ -38,7 +35,7 @@ class ShalatOverview(Gtk.Box):
 
     def to_view(self):
         self.list_btn.hide()
-        
+
     def to_column(self):
         self.list_btn.show()
 

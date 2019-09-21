@@ -17,14 +17,10 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import gi
-gi.require_version('Gtk', '3.0')
-gi.require_version('Handy', '0.0')
-
 from gi.repository import Gtk, Handy
+from .shalatlistrow import ShalatListRow
 Handy.init()
 
-from .shalatlistrow import ShalatListRow
 
 @Gtk.Template(resource_path='/com/github/yursan9/Arkan/ui/shalatlist.ui')
 class ShalatList(Handy.Column):
