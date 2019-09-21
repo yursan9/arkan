@@ -43,6 +43,9 @@ class Manager(GObject.Object):
         self.filename = Path(GLib.get_user_cache_dir())
         self.filename = self.filename / CACHE_FILE
 
+        if self.filename.exists():
+            self._populate()
+
     def update_with_location(self, city, country):
         def update():
             now = datetime.today()
