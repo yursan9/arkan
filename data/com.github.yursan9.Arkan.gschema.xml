@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="arkan">
 	<schema id="com.github.yursan9.Arkan" path="/com/github/yursan9/Arkan/">
-	  <key name="city" type="s">
-	    <default>'Jakarta'</default>
-      <summary>City name for getting prayer times</summary>
-      <description>
-        The name of the city
-      </description>
-    </key>
-
-	  <key name="country" type="s">
-	    <default>'Indonesia'</default>
-      <summary>Country name for getting prayer times</summary>
-      <description>
-        The name of the country
-      </description>
+	  <key name="location" type="(uv)">
+	    <default>(0, &#60;@mmb just nothing&#62;)</default>
+      <summary>Location for searching prayer times</summary>
     </key>
 
 	  <key name="auto-location" type="b">

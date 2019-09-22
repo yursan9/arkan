@@ -105,7 +105,7 @@ class Window(Gtk.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def on_refresh_btn_clicked(self, widget):
-        self.manager.update()
+        self.manager.update(force=True)
 
     @Gtk.Template.Callback()
     def on_place_btn_clicked(self, widget):

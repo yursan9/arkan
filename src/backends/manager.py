@@ -17,7 +17,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from gi.repository import GObject, GLib, Gio
+from gi.repository import GObject, GLib, Gio, GWeather
 
 from pathlib import Path
 from datetime import datetime
@@ -51,24 +51,22 @@ class Manager(GObject.Object):
         if self.filename.exists():
             self._populate()
 
-    def update(self):
+    def update(self, force=False):
         now = datetime.today()
 
-        autoloc = self.settings.get_value('auto-location')
-        if autoloc:
-            url = 'http://api.aladhan.com/v1/calendar'
-            data = {'latitude': 0.0, 'longitude': 0.0}
-        else:
-            url = 'http://api.aladhan.com/v1/calendarByCity'
-            city = self.settings.get_value('city')
-            country = self.settings.get_value('country')
-            data = {'city': city, 'country': country}
+        locdata = self.settings.get_value('location')
+        loc = GWeather.Location.get_world()
+        loc = loc.deserialize(locdata)
 
-        def do(url, data):
-            payload = {'method': 5, 'city': city, 'country': country,
-                       'month': now.month, 'year': now.year, 'adjustment': 1}
+        lat, lng = loc.get_coords()
+        data = {'latitude': lat, 'longitude': lng}
+
+        def do(data):
+            payload = {'method': 5, 'month': now.month, 'year': now.year,
+                       'adjustment': 1}
             payload.update(data)
-            r = requests.get(url, params=payload)
+            print(payload)
+            r = requests.get('http://api.aladhan.com/v1/calendar', params=payload)
 
             self.settings.set_value(
                 'last-update',
@@ -78,8 +76,8 @@ class Manager(GObject.Object):
             GLib.idle_add(self._emit_updated_signal)
 
         last_update = self.settings.get_value('last-update')
-        if now.month != last_update[1]:
-            thread = threading.Thread(target=do, args=(url, data))
+        if now.month != last_update[1] or force:
+            thread = threading.Thread(target=do, args=(data,))
             thread.daemon = True
             thread.start()
 
