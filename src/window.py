@@ -19,6 +19,7 @@ from gi.repository import Gtk, Handy
 
 from .widgets.shalatlist import ShalatList
 from .widgets.shalatoverview import ShalatOverview
+from .widgets.locationpopover import LocationPopover
 from .backends.manager import Manager
 
 Handy.init()
@@ -36,6 +37,7 @@ class Window(Gtk.ApplicationWindow):
 
     shalat_list = None
     shalat_overview = None
+    location_popover = None
 
     manager = None
 
@@ -51,6 +53,8 @@ class Window(Gtk.ApplicationWindow):
         self.shalat_overview = ShalatOverview()
         self.contents.add(self.shalat_overview)
         self.contents.child_set(self.shalat_overview, name='overview')
+
+        self.location_popover = LocationPopover(relative_to=self.place_btn)
 
         self.shalat_overview.connect('change_view', self.on_change_view)
         self.manager.connect('updated', self.on_manager_updated)
@@ -102,6 +106,10 @@ class Window(Gtk.ApplicationWindow):
     @Gtk.Template.Callback()
     def on_refresh_btn_clicked(self, widget):
         self.manager.update()
+
+    @Gtk.Template.Callback()
+    def on_place_btn_clicked(self, widget):
+        self.location_popover.popup()
 
     def on_change_view(self, widget):
         self.contents.set_visible_child(self.shalat_list)

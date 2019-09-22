@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.22.1 -->
+<interface>
+  <requires lib="gtk+" version="3.20"/>
+  <requires lib="libgweather" version="3.0"/>
+  <template class="LocationPopover" parent="GtkPopover">
+    <property name="can_focus">False</property>
+    <child>
+      <object class="GtkGrid" id="contents">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="border_width">9</property>
+        <property name="row_spacing">12</property>
+        <property name="column_spacing">12</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Automatic Location</property>
+          </object>
+          <packing>
+            <property name="left_attach">0</property>
+            <property name="top_attach">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSwitch" id="auto_switch">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <signal name="notify::active" handler="on_auto_switch_active" swapped="no"/>
+          </object>
+          <packing>
+            <property name="left_attach">1</property>
+            <property name="top_attach">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GWeatherLocationEntry" id="loc_entry">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="primary_icon_name">find-location-symbolic</property>
+            <property name="primary_icon_activatable">False</property>
+            <property name="primary_icon_sensitive">False</property>
+            <property name="placeholder_text" translatable="yes">Location</property>
+            <signal name="search-changed" handler="on_loc_entry_changed" swapped="no"/>
+          </object>
+          <packing>
+            <property name="left_attach">0</property>
+            <property name="top_attach">1</property>
+            <property name="width">2</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
