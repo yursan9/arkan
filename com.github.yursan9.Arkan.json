@@ -1,7 +1,7 @@
 {
     "app-id": "com.github.yursan9.Arkan",
     "runtime": "org.gnome.Platform",
-    "runtime-version": "3.32",
+    "runtime-version": "3.34",
     "sdk": "org.gnome.Sdk",
     "command": "arkan",
     "finish-args": [
@@ -34,6 +34,36 @@
     ],
     "modules": [
     	"python3-requests.json",
+    	{
+            "name" : "geocode-glib",
+            "buildsystem" : "meson",
+            "config-opts" : [
+                "-Denable-gtk-doc=false",
+                "-Denable-introspection=false",
+                "-Denable-installed-tests=false"
+            ],
+            "sources" : [
+                {
+                    "type" : "git",
+                    "url" : "https://gitlab.gnome.org/GNOME/geocode-glib.git"
+                }
+            ]
+        },
+    	{
+            "name" : "libgweather",
+            "buildsystem" : "meson",
+            "config-opts" : [
+                "-Dglade_catalog=false",
+                "-Denable_vala=false",
+                "-Dgtk_doc=false"
+            ],
+            "sources" : [
+                {
+                    "type" : "git",
+                    "url" : "https://gitlab.gnome.org/GNOME/libgweather.git"
+                }
+            ]
+        },
         {
             "name" : "libhandy",
             "buildsystem" : "meson",
